@@ -1,6 +1,6 @@
 # THIS IS A FORK...
 ...of an unmaintained cordova plugin with unmerged pull request
-https://github.com/nordnet/cordova-universal-links-plugin/pull/135
+https://github.com/nordnet/cordova-universal-links-plugin/pull/135 and `xmlPreferences.hasOwnProperty` error.
 
 # Cordova Universal Links Plugin
 This Cordova plugin adds support for opening an application from the browser when user clicks on the link. Better known as:
