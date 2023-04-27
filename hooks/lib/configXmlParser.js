@@ -1,12 +1,12 @@
 /*
 Parser for config.xml file. Read plugin-specific preferences (from <universal-links> tag) as JSON object.
 */
-var path = require('path');
-var ConfigXmlHelper = require('./configXmlHelper.js');
-var DEFAULT_SCHEME = 'http';
+var path = require("path");
+var ConfigXmlHelper = require("./configXmlHelper.js");
+var DEFAULT_SCHEME = "http";
 
 module.exports = {
-  readPreferences: readPreferences
+    readPreferences: readPreferences,
 };
 
 // region Public API
@@ -18,32 +18,36 @@ module.exports = {
  * @return {Array} list of host objects
  */
 function readPreferences(cordovaContext) {
-  // read data from projects root config.xml file
-  var configXml = new ConfigXmlHelper(cordovaContext).read();
-  if (configXml == null) {
-    console.warn('config.xml not found! Please, check that it exist\'s in your project\'s root directory.');
-    return null;
-  }
+    // read data from projects root config.xml file
+    var configXml = new ConfigXmlHelper(cordovaContext).read();
+    if (configXml == null) {
+        console.warn(
+            "config.xml not found! Please, check that it exist's in your project's root directory."
+        );
+        return null;
+    }
 
-  // look for data from the <universal-links> tag
-  var ulXmlPreferences = configXml.widget['universal-links'];
-  if (ulXmlPreferences == null || ulXmlPreferences.length == 0) {
-    console.warn('<universal-links> tag is not set in the config.xml. Universal Links plugin is not going to work.');
-    return null;
-  }
+    // look for data from the <universal-links> tag
+    var ulXmlPreferences = configXml.widget["universal-links"];
+    if (ulXmlPreferences == null || ulXmlPreferences.length == 0) {
+        console.warn(
+            "<universal-links> tag is not set in the config.xml. Universal Links plugin is not going to work."
+        );
+        return null;
+    }
 
-  var xmlPreferences = ulXmlPreferences[0];
+    var xmlPreferences = ulXmlPreferences[0];
 
-  // read hosts
-  var hosts = constructHostsList(xmlPreferences);
+    // read hosts
+    var hosts = constructHostsList(xmlPreferences);
 
-  // read ios team ID
-  var iosTeamId = getTeamIdPreference(xmlPreferences);
+    // read ios team ID
+    var iosTeamId = getTeamIdPreference(xmlPreferences);
 
-  return {
-    'hosts': hosts,
-    'iosTeamId': iosTeamId
-  };
+    return {
+        hosts: hosts,
+        iosTeamId: iosTeamId,
+    };
 }
 
 // endregion
@@ -51,11 +55,11 @@ function readPreferences(cordovaContext) {
 // region Private API
 
 function getTeamIdPreference(xmlPreferences) {
-  if (xmlPreferences.hasOwnProperty('ios-team-id')) {
-    return xmlPreferences['ios-team-id'][0]['$']['value'];
-  }
+    if (Object.prototype.hasOwnProperty.call(xmlPreferences, "ios-team-id")) {
+        return xmlPreferences["ios-team-id"][0]["$"]["value"];
+    }
 
-  return null;
+    return null;
 }
 
 /**
@@ -65,22 +69,22 @@ function getTeamIdPreference(xmlPreferences) {
  * @return {Array} array of JSON objects, where each entry defines host data from config.xml.
  */
 function constructHostsList(xmlPreferences) {
-  var hostsList = [];
+    var hostsList = [];
 
-  // look for defined hosts
-  var xmlHostList = xmlPreferences['host'];
-  if (xmlHostList == null || xmlHostList.length == 0) {
-    return [];
-  }
-
-  xmlHostList.forEach(function(xmlElement) {
-    var host = constructHostEntry(xmlElement);
-    if (host) {
-      hostsList.push(host);
+    // look for defined hosts
+    var xmlHostList = xmlPreferences["host"];
+    if (xmlHostList == null || xmlHostList.length == 0) {
+        return [];
     }
-  });
 
-  return hostsList;
+    xmlHostList.forEach(function (xmlElement) {
+        var host = constructHostEntry(xmlElement);
+        if (host) {
+            hostsList.push(host);
+        }
+    });
+
+    return hostsList;
 }
 
 /**
@@ -90,29 +94,29 @@ function constructHostsList(xmlPreferences) {
  * @return {Object} host entry as JSON object
  */
 function constructHostEntry(xmlElement) {
-  var host = {
-      scheme: DEFAULT_SCHEME,
-      name: '',
-      paths: []
+    var host = {
+        scheme: DEFAULT_SCHEME,
+        name: "",
+        paths: [],
     };
-  var hostProperties = xmlElement['$'];
+    var hostProperties = xmlElement["$"];
 
-  if (hostProperties == null || hostProperties.length == 0) {
-    return null;
-  }
+    if (hostProperties == null || hostProperties.length == 0) {
+        return null;
+    }
 
-  // read host name
-  host.name = hostProperties.name;
+    // read host name
+    host.name = hostProperties.name;
 
-  // read scheme if defined
-  if (hostProperties['scheme'] != null) {
-    host.scheme = hostProperties.scheme;
-  }
+    // read scheme if defined
+    if (hostProperties["scheme"] != null) {
+        host.scheme = hostProperties.scheme;
+    }
 
-  // construct paths list, defined for the given host
-  host.paths = constructPaths(xmlElement);
+    // construct paths list, defined for the given host
+    host.paths = constructPaths(xmlElement);
 
-  return host;
+    return host;
 }
 
 /**
@@ -122,24 +126,24 @@ function constructHostEntry(xmlElement) {
  * @return {Array} list of path entries, each on is a JSON object
  */
 function constructPaths(xmlElement) {
-  if (xmlElement['path'] == null) {
-    return ['*'];
-  }
-
-  var paths = [];
-  xmlElement.path.some(function(pathElement) {
-    var url = pathElement['$']['url'];
-
-    // Ignore explicit paths if '*' is defined
-    if (url === '*') {
-      paths = ['*'];
-      return true;
+    if (xmlElement["path"] == null) {
+        return ["*"];
     }
 
-    paths.push(url);
-  });
+    var paths = [];
+    xmlElement.path.some(function (pathElement) {
+        var url = pathElement["$"]["url"];
 
-  return paths;
+        // Ignore explicit paths if '*' is defined
+        if (url === "*") {
+            paths = ["*"];
+            return true;
+        }
+
+        paths.push(url);
+    });
+
+    return paths;
 }
 
 // endregion

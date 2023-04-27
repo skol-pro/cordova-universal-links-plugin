@@ -1,7 +1,6 @@
-# THIS PROJECT IS DEPRECATED
-
-We are not using this repo anymore, and we lack the manpower and the experience needed to maintain it. We are aware of the inconveniece that this may cause you. Feel free to use it as is, or create your own fork. See https://github.com/nordnet/cordova-universal-links-plugin/issues/160 for more information.
-  
+# THIS IS A FORK...
+...of an unmaintained cordova plugin with unmerged pull request
+https://github.com/nordnet/cordova-universal-links-plugin/pull/135
 
 # Cordova Universal Links Plugin
 This Cordova plugin adds support for opening an application from the browser when user clicks on the link. Better known as:
